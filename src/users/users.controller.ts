@@ -41,8 +41,8 @@ export class UsersController {
 
   @Put(':id')
   async update(
-    @Body() updateProductDto: UpdatePasswordDto,
     @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateProductDto: UpdatePasswordDto,   
   ): Promise<UserEntity> {
     const updatedUser = await this.usersService.update(id, updateProductDto);
     return new UserEntity(updatedUser);
