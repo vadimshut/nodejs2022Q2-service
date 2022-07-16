@@ -1,0 +1,70 @@
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
+import { v4 as uuidv4 } from 'uuid';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { IAlbum } from './dto/interfaces/IAlbum';
+import { UpdateAlbumDto } from './dto/update-album.dto';
+
+@Injectable()
+export class AlbumsService {
+  constructor() {}
+
+  private albums: IAlbum[] = [];
+
+  async getAll(): Promise<IAlbum[]> {
+    return this.albums;
+  }
+
+  async getById(id: string): Promise<IAlbum> {
+    const album = this.albums.find((album) => id === album.id);
+    if (album) return album;
+    throw new NotFoundException();
+  }
+
+  async create(albumDto: CreateAlbumDto): Promise<IAlbum> {
+    const newAlbum = {
+      id: uuidv4(),
+      ...albumDto,
+    };
+    this.albums.push(newAlbum);
+    return newAlbum;
+  }
+
+  async update(id: string, albumDto: UpdateAlbumDto): Promise<IAlbum> {
+    const album = this.albums.find((album) => id === album.id);
+    if (album) {
+      let updatedAlbum: IAlbum | null = null;
+      this.albums = this.albums.map((album) =>
+        album.id === id
+          ? (updatedAlbum = {
+              ...album,
+              ...albumDto,
+            })
+          : album,
+      );
+      return updatedAlbum;
+    }
+    throw new NotFoundException();
+  }
+
+  async removeArtist(id: string): Promise<void> {
+    this.albums = this.albums.map((album) =>
+      album.artistId === id ? { ...album, artistId: null } : album,
+    );
+    return;
+  }
+
+  async remove(id: string): Promise<IAlbum> {
+    const album = this.albums.find((album) => id === album.id);
+    if (album) {
+      this.albums = this.albums.filter((album) => album.id !== id);
+      return;
+    }
+    throw new NotFoundException();
+  }
+}
