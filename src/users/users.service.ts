@@ -61,4 +61,12 @@ export class UsersService {
 
     return updatedUser;
   }
+
+  async remove(id: string): Promise<void> {
+    const user = this.users.find((user) => id === user.id);
+    if (!user) throw new NotFoundException();
+
+    this.users = this.users.filter((user) => user.id !== id);
+    return;
+  }
 }

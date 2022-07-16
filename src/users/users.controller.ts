@@ -2,7 +2,10 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -42,9 +45,15 @@ export class UsersController {
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateProductDto: UpdatePasswordDto,   
+    @Body() updateProductDto: UpdatePasswordDto,
   ): Promise<UserEntity> {
     const updatedUser = await this.usersService.update(id, updateProductDto);
     return new UserEntity(updatedUser);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+    return this.usersService.remove(id);
   }
 }
