@@ -1,5 +1,5 @@
 export interface IArtist {
-    id: string;
-    name: string;
-    grammy: boolean;
-  }
+  id: string;
+  name: string;
+  grammy: boolean;
+}
