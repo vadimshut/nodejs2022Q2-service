@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -14,6 +15,11 @@ import { ITrack } from './interfaces/ITrack';
 export class TracksService {
   private tracks: ITrack[] = [];
 
+  constructor(
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
+  ) {}
+  
   async getAll(): Promise<ITrack[]> {
     return this.tracks;
   }
@@ -33,13 +39,7 @@ export class TracksService {
     return newTrack;
   }
 
-  async remove(id: string): Promise<ITrack> {
-    const track = this.tracks.find((track) => id === track.id);
-    if (!track) throw new NotFoundException();
-
-    this.tracks = this.tracks.filter((track) => track.id !== id);
-    return;
-  }
+  
 
   async update(id: string, trackDto: UpdateTrackDto): Promise<ITrack> {
     const track = this.tracks.find((track) => id === track.id);
@@ -68,6 +68,15 @@ export class TracksService {
     this.tracks = this.tracks.map((track) =>
       track.albumId === id ? { ...track, albumId: null } : track,
     );
+    return;
+  }
+
+  async remove(id: string): Promise<ITrack> {
+    const track = this.tracks.find((track) => id === track.id);
+    if (!track) throw new NotFoundException();
+
+    await this.favoritesService.removeTrack(id);
+    this.tracks = this.tracks.filter((track) => track.id !== id);
     return;
   }
 }
