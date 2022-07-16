@@ -10,6 +10,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { AlbumsService } from 'src/albums/albums.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class ArtistsService {
@@ -21,6 +22,9 @@ export class ArtistsService {
 
     @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
+
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   async getAll(): Promise<IArtist[]> {
@@ -63,6 +67,7 @@ export class ArtistsService {
     if (!artist) throw new NotFoundException();
     await this.albumsService.removeArtist(id);
     await this.tracksService.removeArtist(id);
+    await this.favoritesService.removeArtist(id);
     this.artists = this.artists.filter((artist) => artist.id !== id);
     return;
   }
