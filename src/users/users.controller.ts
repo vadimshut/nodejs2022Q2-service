@@ -6,12 +6,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { IUser } from './interfaces/IUser';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { UpdatePasswordDto } from './dto/update-user.dto';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,8 +34,17 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() CreateUserDto: CreateUserDto): Promise<UserEntity> {
-    const newUser = await this.usersService.create(CreateUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+    const newUser = await this.usersService.create(createUserDto);
     return new UserEntity(newUser);
+  }
+
+  @Put(':id')
+  async update(
+    @Body() updateProductDto: UpdatePasswordDto,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<UserEntity> {
+    const updatedUser = await this.usersService.update(id, updateProductDto);
+    return new UserEntity(updatedUser);
   }
 }
