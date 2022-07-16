@@ -19,7 +19,7 @@ export class TracksService {
     @Inject(forwardRef(() => FavoritesService))
     private readonly favoritesService: FavoritesService,
   ) {}
-  
+
   async getAll(): Promise<ITrack[]> {
     return this.tracks;
   }
@@ -38,8 +38,6 @@ export class TracksService {
     this.tracks.push(newTrack);
     return newTrack;
   }
-
-  
 
   async update(id: string, trackDto: UpdateTrackDto): Promise<ITrack> {
     const track = this.tracks.find((track) => id === track.id);
