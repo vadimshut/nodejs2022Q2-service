@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { AlbumsService } from 'src/albums/albums.service';
+import { TracksService } from 'src/tracks/tracks.service';
 
 @Injectable()
 export class ArtistsService {
@@ -17,6 +18,9 @@ export class ArtistsService {
   constructor(
     @Inject(forwardRef(() => AlbumsService))
     private readonly albumsService: AlbumsService,
+
+    @Inject(forwardRef(() => TracksService))
+    private readonly tracksService: TracksService,
   ) {}
 
   async getAll(): Promise<IArtist[]> {
@@ -58,6 +62,7 @@ export class ArtistsService {
     const artist = this.artists.find((artist) => id === artist.id);
     if (!artist) throw new NotFoundException();
     await this.albumsService.removeArtist(id);
+    await this.tracksService.removeArtist(id);
     this.artists = this.artists.filter((artist) => artist.id !== id);
     return;
   }
