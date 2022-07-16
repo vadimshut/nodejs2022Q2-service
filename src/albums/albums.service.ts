@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { FavoritesService } from 'src/favorites/favorites.service';
 import { TracksService } from 'src/tracks/tracks.service';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +17,9 @@ export class AlbumsService {
   constructor(
     @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
+
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   private albums: IAlbum[] = [];
@@ -67,6 +71,7 @@ export class AlbumsService {
     if (!album) throw new NotFoundException();
 
     await this.tracksService.removeAlbums(id);
+    await this.favoritesService.removeAlbum(id);
     this.albums = this.albums.filter((album) => album.id !== id);
     return;
   }
