@@ -31,16 +31,16 @@ export class TracksController {
   }
 
   @Post()
-  create(@Body() CreateTrackDto: CreateTrackDto): Promise<ITrack> {
-    return this.tracksService.create(CreateTrackDto);
+  create(@Body() createTrackDto: CreateTrackDto): Promise<ITrack> {
+    return this.tracksService.create(createTrackDto);
   }
 
   @Put(':id')
   update(
-    @Body() UpdateTrackDto: UpdateTrackDto,
+    @Body() updateTrackDto: UpdateTrackDto,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<ITrack> {
-    return this.tracksService.update(id, UpdateTrackDto);
+    return this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
