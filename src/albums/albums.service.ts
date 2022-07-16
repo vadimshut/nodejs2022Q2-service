@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { TracksService } from 'src/tracks/tracks.service';
 
 import { v4 as uuidv4 } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -12,7 +13,10 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumsService {
-  constructor() {}
+  constructor(
+    @Inject(forwardRef(() => TracksService))
+    private readonly tracksService: TracksService,
+  ) {}
 
   private albums: IAlbum[] = [];
 
@@ -22,8 +26,8 @@ export class AlbumsService {
 
   async getById(id: string): Promise<IAlbum> {
     const album = this.albums.find((album) => id === album.id);
-    if (album) return album;
-    throw new NotFoundException();
+    if (!album) throw new NotFoundException();
+    return album;
   }
 
   async create(albumDto: CreateAlbumDto): Promise<IAlbum> {
@@ -37,19 +41,18 @@ export class AlbumsService {
 
   async update(id: string, albumDto: UpdateAlbumDto): Promise<IAlbum> {
     const album = this.albums.find((album) => id === album.id);
-    if (album) {
-      let updatedAlbum: IAlbum | null = null;
-      this.albums = this.albums.map((album) =>
-        album.id === id
-          ? (updatedAlbum = {
-              ...album,
-              ...albumDto,
-            })
-          : album,
-      );
-      return updatedAlbum;
-    }
-    throw new NotFoundException();
+    if (!album) throw new NotFoundException();
+
+    let updatedAlbum: IAlbum | null = null;
+    this.albums = this.albums.map((album) =>
+      album.id === id
+        ? (updatedAlbum = {
+            ...album,
+            ...albumDto,
+          })
+        : album,
+    );
+    return updatedAlbum;
   }
 
   async removeArtist(id: string): Promise<void> {
@@ -61,10 +64,10 @@ export class AlbumsService {
 
   async remove(id: string): Promise<IAlbum> {
     const album = this.albums.find((album) => id === album.id);
-    if (album) {
-      this.albums = this.albums.filter((album) => album.id !== id);
-      return;
-    }
-    throw new NotFoundException();
+    if (!album) throw new NotFoundException();
+
+    await this.tracksService.removeAlbums(id);
+    this.albums = this.albums.filter((album) => album.id !== id);
+    return;
   }
 }
