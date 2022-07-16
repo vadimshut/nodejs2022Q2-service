@@ -30,16 +30,16 @@ export class AlbumsController {
   }
 
   @Post()
-  create(@Body() CreateAlbumDto: CreateAlbumDto): Promise<IAlbum> {
-    return this.albumsService.create(CreateAlbumDto);
+  create(@Body() createAlbumDto: CreateAlbumDto): Promise<IAlbum> {
+    return this.albumsService.create(createAlbumDto);
   }
 
   @Put(':id')
   update(
-    @Body() UpdateAlbumDto: UpdateAlbumDto,
+    @Body() updateAlbumDto: UpdateAlbumDto,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<IAlbum> {
-    return this.albumsService.update(id, UpdateAlbumDto);
+    return this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')

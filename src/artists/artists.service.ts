@@ -1,12 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IArtist } from './interfaces/IArtist';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { AlbumsService } from 'src/albums/albums.service';
 
 @Injectable()
 export class ArtistsService {
   private artists: IArtist[] = [];
+
+  constructor(
+    @Inject(forwardRef(() => AlbumsService))
+    private readonly albumsService: AlbumsService,
+  ) {}
 
   async getAll(): Promise<IArtist[]> {
     return this.artists;
@@ -46,6 +57,7 @@ export class ArtistsService {
   async remove(id: string): Promise<void> {
     const artist = this.artists.find((artist) => id === artist.id);
     if (!artist) throw new NotFoundException();
+    await this.albumsService.removeArtist(id);
     this.artists = this.artists.filter((artist) => artist.id !== id);
     return;
   }
