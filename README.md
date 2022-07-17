@@ -65,6 +65,12 @@ npm run lint
 npm run format
 ```
 
+### Run Swagger
+In brouser put link: 
+```
+http://localhost:4000/doc/
+```
+
 ### Debugging in VSCode
 
 Press <kbd>F5</kbd> to debug.
