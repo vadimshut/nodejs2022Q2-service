@@ -1,21 +1,22 @@
 version: '3.8'
 services:
   app:
-    container_name: nestjs-service
     build: .
+    image: vadimshut/homeservice
+    restart: always
+    depends_on:
+      - postgres
     ports:
       - "${PORT}:${PORT}"
     volumes:
       - ./:/usr/src/app/
       - /usr/src/app/node_modules
-    depends_on:
-      - postgres
-    restart: always
     networks:
       - my_network
+
   postgres:
-    container_name: postgres-container
     build: ./db
+    image: postgres
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -23,9 +24,14 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - datapg:/var/lib/postgresql/data
     networks:
       - my_network
 
 networks:
   my_network:
     driver: bridge
+
+volumes:
+  datapg:
