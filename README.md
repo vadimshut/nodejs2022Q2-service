@@ -20,7 +20,13 @@ npm install
 ## Running application
 
 ```
-npm start
+docker-compose up --build
+```
+
+## Running script for vulnerabilities scanning
+
+```
+npm run docker:scan
 ```
 
 After starting the app on port (4000 as default) you can open
@@ -66,7 +72,9 @@ npm run format
 ```
 
 ### Run Swagger
-In brouser put link: 
+
+In brouser put link:
+
 ```
 http://localhost:4000/doc/
 ```
