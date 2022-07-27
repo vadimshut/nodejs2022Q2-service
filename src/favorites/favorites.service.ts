@@ -6,13 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { IAlbum } from 'src/albums/dto/interfaces/IAlbum';
-import { IArtist } from 'src/artists/interfaces/IArtist';
-import { ITrack } from 'src/tracks/interfaces/ITrack';
 import { TracksService } from 'src/tracks/tracks.service';
 import { AlbumsService } from './../albums/albums.service';
 import { ArtistsService } from './../artists/artists.service';
-import { IFavoritesResponse } from './interfaces/IFavoritesResponse';
 import {
   FavoriteEntity,
   FavoriteEntityResponse,
@@ -33,37 +29,6 @@ export class FavoritesService {
     @InjectRepository(FavoriteEntity)
     private favoriteRepository: Repository<FavoriteEntity>,
   ) {}
-
-  // async getAll(): Promise<IFavoritesResponse> {
-  //   const tracks: ITrack[] = await Promise.allSettled(
-  //     this.favorites.tracks.map((trackId) =>
-  //       this.tracksService.getById(trackId),
-  //     ),
-  //   ).then((res) =>
-  //     res.map(
-  //       (item) => ((item as unknown) as PromiseFulfilledResult<any>).value,
-  //     ),
-  //   );
-  //   const albums: IAlbum[] = await Promise.allSettled(
-  //     this.favorites.albums.map((albumId) =>
-  //       this.albumsService.getById(albumId),
-  //     ),
-  //   ).then((res) =>
-  //     res.map(
-  //       (item) => ((item as unknown) as PromiseFulfilledResult<any>).value,
-  //     ),
-  //   );
-  //   const artists: IArtist[] = await Promise.allSettled(
-  //     this.favorites.artists.map((artistId) =>
-  //       this.artistsService.getById(artistId),
-  //     ),
-  //   ).then((res) =>
-  //     res.map(
-  //       (item) => ((item as unknown) as PromiseFulfilledResult<any>).value,
-  //     ),
-  //   );
-  //   return { artists, albums, tracks };
-  // }
 
   async getFavsId(): Promise<string> {
     const favsAll = await this.favoriteRepository.find();
