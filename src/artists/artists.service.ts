@@ -34,9 +34,9 @@ export class ArtistsService {
   }
 
   async getById(id: string): Promise<ArtistEntity> {
-    const artist = this.artistRepository.findOne({ where: { id } });
-    if (!artist) throw new NotFoundException();
-    return artist;
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (artist) return artist;
+    throw new NotFoundException();
   }
 
   async create(artistDto: CreateArtistDto): Promise<ArtistEntity> {
@@ -45,7 +45,7 @@ export class ArtistsService {
   }
 
   async update(id: string, artistDto: UpdateArtistDto): Promise<ArtistEntity> {
-    const artist = this.artistRepository.findOne({ where: { id } });
+    const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) throw new NotFoundException();
 
     return await this.artistRepository.save(
