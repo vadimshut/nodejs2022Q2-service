@@ -13,6 +13,9 @@ import {
   FavoriteEntity,
   FavoriteEntityResponse,
 } from './entities/favorite.entity';
+import { AlbumEntity } from 'src/albums/entities/album.entity';
+import { ArtistEntity } from 'src/artists/entities/artist.entity';
+import { TrackEntity } from 'src/tracks/entities/track.entity';
 
 @Injectable()
 export class FavoritesService {
@@ -33,48 +36,52 @@ export class FavoritesService {
   async getFavsId(): Promise<string> {
     const favsAll = await this.favoriteRepository.find();
     if (favsAll.length) return favsAll[0].id;
-    const favs = await this.favoriteRepository.save(
+    const favorites = await this.favoriteRepository.save(
       this.favoriteRepository.create({
         artists: [],
         albums: [],
         tracks: [],
       }),
     );
-    return favs.id;
+    return favorites.id;
+  }
+
+  async resolveById(
+    idsList: string[],
+    serviceName: string,
+  ): Promise<TrackEntity[] | AlbumEntity[] | ArtistEntity[]> {
+    const services = {
+      tracks: this.tracksService,
+      albums: this.albumsService,
+      artists: this.artistsService,
+    };
+    const result = [];
+
+    for (const id of idsList) {
+      try {
+        const data = await services[serviceName].getById(id);
+        result.push(data);
+      } catch {}
+    }
+    return result;
   }
 
   async getUserFavs(): Promise<FavoriteEntityResponse> {
-    const tracks = [];
-    const albums = [];
-    const artists = [];
-
     const favsId = await this.getFavsId();
-    const favs = await this.favoriteRepository.findOne({
+    const favorites = await this.favoriteRepository.findOne({
       where: { id: favsId },
     });
 
-    favs.tracks.forEach(async (trackId) => {
-      try {
-        const trackData = await this.tracksService.getById(trackId);
-        tracks.push(trackData);
-      } catch {}
-    });
+    const tracks = await this.resolveById(favorites.tracks, 'tracks');
+    const albums = await this.resolveById(favorites.albums, 'albums');
+    const artists = await this.resolveById(favorites.artists, 'artists');
 
-    favs.albums.forEach(async (albumId) => {
-      try {
-        const albumData = await this.albumsService.getById(albumId);
-        albums.push(albumData);
-      } catch {}
-    });
-
-    favs.artists.forEach(async (artistId) => {
-      try {
-        const artistData = await this.artistsService.getById(artistId);
-        artists.push(artistData);
-      } catch {}
-    });
-
-    return { ...favs, artists, albums, tracks };
+    return {
+      id: favsId,
+      artists: artists as ArtistEntity[],
+      albums: albums as AlbumEntity[],
+      tracks: tracks as TrackEntity[],
+    };
   }
 
   async addTrack(id: string): Promise<void> {
