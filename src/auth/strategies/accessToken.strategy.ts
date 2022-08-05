@@ -7,7 +7,7 @@ import { IJwtPayload } from '../interfaces/IJwtPayload';
 config();
 
 @Injectable()
-export class AuthStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
