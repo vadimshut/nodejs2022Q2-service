@@ -25,7 +25,7 @@ export class UserEntity implements IUser {
   hashRefreshToken: string | null;
 
   toResponse() {
-    const { password, ...response } = this;
+    const { password: _password, ...response } = this;
     return response;
   }
 }
