@@ -5,6 +5,7 @@ import { AuthStrategy } from './strategies/authToken.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
 @Module({
   imports: [JwtModule.register({}), UsersModule],
@@ -12,7 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: AccessTokenGuard,
     },
   ],
 })
