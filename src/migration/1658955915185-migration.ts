@@ -32,6 +32,11 @@ export class migration1658955915185 implements MigrationInterface {
             name: 'updatedAt',
             type: 'bigint',
           },
+          {
+            name: 'hashRefreshToken',
+            type: 'varchar',
+            isNullable: true,
+          },
         ],
       }),
       true,
