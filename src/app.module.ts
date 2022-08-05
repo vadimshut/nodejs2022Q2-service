@@ -7,6 +7,8 @@ import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import configService from './ormconfig';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './common/guards/accessToken.guard';
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import configService from './ormconfig';
     FavoritesModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRoot(configService),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
   ],
 })
 export class AppModule {}

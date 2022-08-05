@@ -30,6 +30,14 @@ export class UsersService {
     throw new NotFoundException();
   }
 
+  async getByUsername(username: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { login: username },
+    });
+    if (!user) throw new NotFoundException();
+    return user;
+  }
+
   async create(
     userDto: CreateUserDto,
   ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
