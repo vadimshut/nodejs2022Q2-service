@@ -20,6 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker:scan": "docker scan vadimshut/homeservice",
+    "docker:start": "docker-compose up --build",
     "migration:create": "node ./node_modules/typeorm/cli migration:create ./src/migration/migration"
   },
   "dependencies": {
