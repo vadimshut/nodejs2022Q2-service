@@ -1,7 +1,15 @@
-export const LoggerLevels = {
-  0: ['log'],
-  1: ['log', 'error'],
-  2: ['log', 'error', 'warn'],
-  3: ['log', 'error', 'warn', 'debug'],
-  4: ['log', 'error', 'warn', 'debug', 'verbose'],
+import { LEVELS_NAME } from './levelsName.enum';
+
+export const LOGGER_LEVELS = {
+  0: [LEVELS_NAME.LOG],
+  1: [LEVELS_NAME.LOG, LEVELS_NAME.ERROR],
+  2: [LEVELS_NAME.LOG, LEVELS_NAME.ERROR, LEVELS_NAME.WARN],
+  3: [LEVELS_NAME.LOG, LEVELS_NAME.ERROR, LEVELS_NAME.WARN, LEVELS_NAME.DEBUG],
+  4: [
+    LEVELS_NAME.LOG,
+    LEVELS_NAME.ERROR,
+    LEVELS_NAME.WARN,
+    LEVELS_NAME.DEBUG,
+    LEVELS_NAME.VERBOSE,
+  ],
 };
