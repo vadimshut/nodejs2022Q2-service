@@ -21,5 +21,7 @@ export class LoggerMiddleware implements NestMiddleware {
         )}, Body: ${this.objectToString(body)}`,
       );
     });
+
+    next();
   }
 }

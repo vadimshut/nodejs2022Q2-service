@@ -7,12 +7,14 @@ import { ALTERNATIVE_PORT } from './constants';
 import { dirname, join } from 'path';
 import { parse } from 'yaml';
 import { readFile } from 'fs/promises';
+import { CustomLogger } from './common/logger/logger.service';
 config();
 
 const PORT = Number(process.env['PORT']) || ALTERNATIVE_PORT;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(CustomLogger));
 
   const rootDirname = dirname(__dirname);
   const DOC_API = await readFile(join(rootDirname, 'doc', 'api.yaml'), 'utf-8');
