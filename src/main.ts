@@ -24,3 +24,7 @@ async function bootstrap() {
   console.log(`🚀 Server ready at http://localhost:${PORT}`);
 }
 bootstrap();
+
+process.on('unhandledRejection', (reason, promise) => {});
+
+process.on('uncaughtException', (err, origin) => {});
