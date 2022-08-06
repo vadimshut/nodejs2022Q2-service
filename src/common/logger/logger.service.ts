@@ -9,4 +9,24 @@ export class CustomLogger extends ConsoleLogger {
     super();
     this.setLogLevels(LOGGER_LEVELS[process.env.LOGGER_LEVEL]);
   }
+
+  log(message: any, context: string) {
+    super.log(message, context);
+  }
+
+  error(message: any, stack: string, context: string) {
+    super.error(message, stack, context);
+  }
+
+  warn(message: any, context: string) {
+    super.warn(message, context);
+  }
+
+  debug(message: any, contex: string) {
+    super.debug(message, contex);
+  }
+
+  verbose(message: any, context: string) {
+    super.verbose(message, context);
+  }
 }
