@@ -17,10 +17,10 @@ git clone {repository URL}
 npm install
 ```
 
-### Switch to branch `hls-part-4`
+### Switch to branch `hls-part-5`
 
 ```
-git checkout hls-part-4
+git checkout hls-part-5
 ```
 
 ## Running application
