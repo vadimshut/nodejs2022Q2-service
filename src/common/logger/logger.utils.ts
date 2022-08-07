@@ -39,7 +39,7 @@ const getFilePath = (logLevel: LEVELS_NAME) => {
 
   if (!existsSync(dirname)) mkdirSync(dirname);
   const fileName = createFileName(isErrorLogType);
-  let filePath = join(dirname, fileName);
+  const filePath = join(dirname, fileName);
 
   return filePath;
 };

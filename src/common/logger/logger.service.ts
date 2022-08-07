@@ -15,7 +15,6 @@ export class CustomLogger extends ConsoleLogger {
 
   static tslastLogError = Date.now();
   static tslastLogOtherLogs = Date.now();
-  static lastLog = Date.now();
 
   log(message: any, context: string) {
     writeToFile(LEVELS_NAME.LOG, message, context);
