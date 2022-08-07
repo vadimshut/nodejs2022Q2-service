@@ -9,6 +9,8 @@ import { parse } from 'yaml';
 import { readFile } from 'fs/promises';
 import { CustomLogger } from './common/logger/logger.service';
 import { HttpExceptionFilter } from './common/HttpExceptionFilter';
+import { LEVELS_NAME } from './common/logger/levelsName.enum';
+import { writeToFile } from './common/logger/logger.utils';
 config();
 
 const PORT = Number(process.env['PORT']) || ALTERNATIVE_PORT;
@@ -30,6 +32,16 @@ async function bootstrap() {
 }
 bootstrap();
 
-process.on('unhandledRejection', (reason, promise) => {});
+process.on('unhandledRejection', (reason, promise) => {
+  writeToFile(
+    LEVELS_NAME.ERROR,
+    `Unhandled rejection: ${promise}, reason" ${reason}`,
+  );
+});
 
-process.on('uncaughtException', (err, origin) => {});
+process.on('uncaughtException', (err, origin) => {
+  writeToFile(
+    LEVELS_NAME.ERROR,
+    `Unhandled exception: ${err}, exception origin" ${origin}`,
+  );
+});

@@ -11,7 +11,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import configService from './ormconfig';
 import { AccessTokenGuard } from './common/guards/accessToken.guard';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
-import { CustomLogger } from './common/logger/logger.service';
+import { LoggerModule } from './common/logger/logger.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { CustomLogger } from './common/logger/logger.service';
     FavoritesModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRoot(configService),
-    CustomLogger,
+    LoggerModule,
   ],
   providers: [
     {
