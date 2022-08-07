@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     this.customLogger.error(message, stack);
 
     response.status(status).json({
-      staisCode: status,
+      statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
