@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    image: vadimshut/homeservice
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./:/usr/src/app/
+      - /usr/src/app/node_modules
+    networks:
+      - my_network
+
+  postgres:
+    build: ./db
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - datapg:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  datapg:
