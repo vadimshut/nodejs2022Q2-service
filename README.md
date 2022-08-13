@@ -17,10 +17,22 @@ git clone {repository URL}
 npm install
 ```
 
+### Switch to branch `hls-part-4`
+
+```
+git checkout hls-part-4
+```
+
 ## Running application
 
 ```
 docker-compose up --build
+```
+
+or
+
+```
+npm run docker:start
 ```
 
 ## Running script for vulnerabilities scanning

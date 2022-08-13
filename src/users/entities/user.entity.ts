@@ -21,6 +21,9 @@ export class UserEntity implements IUser {
   @Column()
   updatedAt: number;
 
+  @Column()
+  hashRefreshToken: string | null;
+
   toResponse() {
     const { password, ...response } = this;
     return response;

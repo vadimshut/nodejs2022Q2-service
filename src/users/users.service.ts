@@ -6,7 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
-import { IUser } from './interfaces/IUser';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -30,6 +29,14 @@ export class UsersService {
     throw new NotFoundException();
   }
 
+  async getByUsername(username: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { login: username },
+    });
+    if (!user) throw new NotFoundException();
+    return user;
+  }
+
   async create(
     userDto: CreateUserDto,
   ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
@@ -50,14 +57,13 @@ export class UsersService {
     userDto: UpdatePasswordDto,
   ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
     const { oldPassword, newPassword } = userDto;
-    let updatedUser: IUser | null = null;
     const updatedAt = Date.now();
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException();
 
     if (user.password !== oldPassword) {
-      throw new ForbiddenException('oldPassword is wrong');
+      throw new ForbiddenException('Old password is wrong');
     }
 
     return (
@@ -71,6 +77,17 @@ export class UsersService {
         }),
       )
     ).toResponse();
+  }
+
+  async updateHashRefreshToken(id: string, hash: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    await this.userRepository.save(
+      this.userRepository.create({
+        ...user,
+        hashRefreshToken: hash,
+      }),
+    );
+    return;
   }
 
   async remove(id: string): Promise<void> {
