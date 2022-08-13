@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -10,6 +10,8 @@ import { AlbumsModule } from './albums/albums.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import configService from './ormconfig';
 import { AccessTokenGuard } from './common/guards/accessToken.guard';
+import { LoggerMiddleware } from './common/logger/logger.middleware';
+import { LoggerModule } from './common/logger/logger.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { AccessTokenGuard } from './common/guards/accessToken.guard';
     FavoritesModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRoot(configService),
+    LoggerModule,
   ],
   providers: [
     {
@@ -29,4 +32,8 @@ import { AccessTokenGuard } from './common/guards/accessToken.guard';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
