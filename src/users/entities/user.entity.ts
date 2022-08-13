@@ -1,17 +1,28 @@
-import { Exclude } from 'class-transformer';
 import { IUser } from '../interfaces/IUser';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity('user')
 export class UserEntity implements IUser {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  login: string;
-  version: number;
-  createdAt: number;
-  updatedAt: number;
 
-  @Exclude()
+  @Column()
+  login: string;
+
+  @Column()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
+  @Column()
+  version: number;
+
+  @Column()
+  createdAt: number;
+
+  @Column()
+  updatedAt: number;
+
+  toResponse() {
+    const { password, ...response } = this;
+    return response;
   }
 }

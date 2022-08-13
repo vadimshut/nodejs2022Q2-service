@@ -23,32 +23,30 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getAll(): Promise<UserEntity[]> {
-    const users = await this.usersService.getAll();
-    return users.map((user) => new UserEntity(user));
+  async getAll(): Promise<Omit<UserEntity, 'password' | 'toResponse'>[]> {
+    return await this.usersService.getAll();
   }
 
   @Get(':id')
   async getOne(
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<UserEntity> {
-    const user = await this.usersService.getById(id);
-    return new UserEntity(user);
+  ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
+    return await this.usersService.getById(id);
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    const newUser = await this.usersService.create(createUserDto);
-    return new UserEntity(newUser);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
+    return await this.usersService.create(createUserDto);
   }
 
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateProductDto: UpdatePasswordDto,
-  ): Promise<UserEntity> {
-    const updatedUser = await this.usersService.update(id, updateProductDto);
-    return new UserEntity(updatedUser);
+  ): Promise<Omit<UserEntity, 'password' | 'toResponse'>> {
+    return await this.usersService.update(id, updateProductDto);
   }
 
   @Delete(':id')

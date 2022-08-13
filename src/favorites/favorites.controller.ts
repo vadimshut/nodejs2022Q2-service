@@ -8,16 +8,16 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { FavoriteEntityResponse } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
-import { IFavoritesResponse } from './interfaces/IFavoritesResponse';
 
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  getAll(): Promise<IFavoritesResponse> {
-    return this.favoritesService.getAll();
+  getAll(): Promise<FavoriteEntityResponse> {
+    return this.favoritesService.getUserFavs();
   }
 
   @Post('track/:id')
